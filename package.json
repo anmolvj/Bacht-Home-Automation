@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/anmolvj/bacht/issues"
   },
-  "homepage": "https://github.com/anmolvj/bacht#readme"
+  "homepage": "https://github.com/anmolvj/bacht#readme",
+  "dependencies": {
+    "async": "^2.4.0",
+    "express": "^4.15.3",
+    "mongoose": "^4.10.0",
+    "nodemon": "^1.11.0"
+  }
 }
