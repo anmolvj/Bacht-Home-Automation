@@ -1,15 +1,19 @@
 var express 	= require('express');
 var router 		= express.Router();
-
-var home_json = {
-	"total_usage" : 433,
-	"max_limit" : 1000
-}
+var Device 		= require('../models/device');
+var User 		= require('../models/user');
+//return total usage so far and max limit
 
 
 router.get('/:uid', (req,res,next)=>{
-	var uid = req.params.uid;
-	res.send(home_json);
+	var user_id = req.params.uid;
+	User.findOne({uid:user_id}).exec()
+	.then((oneUser)=>{
+		res.send({total_usage: oneUser.total_usage, max_limit: oneUser.max_limit });
+	})
+	.catch(function(err){
+  		console.log('error:', err);
+		});
 
 });
 

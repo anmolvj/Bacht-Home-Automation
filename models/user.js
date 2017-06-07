@@ -1,24 +1,24 @@
 var mongoose = require('mongoose');
-
 var Schema = mongoose.Schema;
+var Device 	= require('./device');
 
 var UserSchema = Schema(
 	{
 		uid: 		{type: Number, required:true, unique: true},
-		name: 		{type:String, unique:true, required:true},
-		home_usage: {type:Number, default:0},
+		name: 		{type:String},
+		total_usage: {type:Number, default:0},
+		token: 		{type:String, default:null},
+		max_limit: 	{type:Number, default:1000},
+		usage: 		{type:Number, default:0},
+		devices: 	[],
 		history: {
 					day: 	{type:Number, default:0},
 					week: 	{type:Number, default:0},
 					month: 	{type:Number, default:0}
-				},
-		devices: [{
-					name:{type: String},
-					did: {type: Number}
-		 }],		
-		max_limit: 	1000,
+				},		
 	});
 
 //Turned to a model before exporting
 module.exports = mongoose.model('User', UserSchema);
-		
+
+// devices: 	[{type: mongoose.Schema.Types.ObjectId, ref: 'Device'}],		

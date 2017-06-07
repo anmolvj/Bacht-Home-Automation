@@ -1,0 +1,43 @@
+_M O D E L S_
+{
+	User{
+		UID:	Number
+		Name: 	String
+		Token: 	String
+		Limit:	Number
+		Usage:	Number
+		Devices:	[device_id's]
+		Scheduled_Devices:	[device_id's , Start, Stop, JobId]
+		$VIRTUALS:[Today(), Week(), Month(), Year()]
+
+	}
+
+	Devices{
+		Device_Id
+		Name
+		Img_URL
+		LastUsed
+		schedule_status
+		$VIRTUALS: ConsumedUnits()
+	}
+
+	History{
+		device_id
+		log: [startStamp, stopStamp, val:stop-start]
+		$VIRTUALS: [Day(), Week():7 days, Month(), Year()]
+	}
+
+}
+
+
+'PAPERWORK.JS' .. for .. P O S T .. R E Q U E S T .. J S O N .. V A L I D A T I O N 
+
+_I N T E R N A L .. M E T H O D S_
+1)Add User
+2)Add Device
+3)Schedule Device
+4)Cancel Schedule
+5)Delete Device
+6)User Usage
+7)Device Usage
+8)Show All Devices
