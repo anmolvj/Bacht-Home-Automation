@@ -67,7 +67,7 @@ user1.save()
 
 app.get('/',(req,res,next)=>{
 
-	res.send('hello you');
+	res.send('Next go to bacht.com/init to initialise the database');
 })
 
 app.get('/init',(req,res,next)=>{
