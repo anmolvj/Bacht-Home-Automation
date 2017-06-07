@@ -7,7 +7,10 @@ var port 		= 3000;
 var app			= express();
 var cron 	= require('node-cron');
 var log 	= require('./models/scheduleLog');
- 
+var schedule = require('node-schedule');
+
+
+
  var d = new Date(0);
  var sec = 1495330326;
  d.setUTCSeconds(sec);
@@ -103,6 +106,8 @@ app.get('/init',(req,res,next)=>{
 
 	res.send("DB Initialization Complete");
 })
+
+
 
 app.use("/devices", devv);
 app.use("/sdevices", sdevv);
