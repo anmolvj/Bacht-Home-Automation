@@ -23,7 +23,7 @@ router.get('/', (req,res,next)=>{
 			var regTokens = [token];
 
 			// Actually send the message
-			sender.send(message, { registrationTokens: regTokens }, function (err, response) {
+			sender.sendNoRetry(message, { registrationTokens: regTokens }, function (err, response) {
 				if (err) console.error(err);
 				else console.log(response);
 			});
