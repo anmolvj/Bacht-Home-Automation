@@ -26,11 +26,10 @@ router.get('/:uid', (req,res,next)=>{
 
 
 
-router.get('/:uid/:token', (req,res,next)=>{
-	var user_id = req.params.uid;
-	var token = req.params.token;
+router.post('/', (req,res,next)=>{
+	var user_id = req.body.uid;
+	var token = req.body.token;
 
-	
 	if(token == undefined | token == null){
 		res.send({success: false, msg:'No Token passed'})
 	}
@@ -38,7 +37,7 @@ router.get('/:uid/:token', (req,res,next)=>{
 
 		User.where({ uid: user_id }).update({ $set: { "token" : token }}).exec()
 		.then(()=>{
-			res.send({success: true, msg:'Following token was saved: ' + '[' + token + ']'});
+			res.send({success: true});
 		})
 		.catch(function(err){
   		console.log('Error Handler:', err.message);

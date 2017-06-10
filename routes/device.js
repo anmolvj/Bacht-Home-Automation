@@ -30,7 +30,27 @@ router.get('/:uid', (req,res,next)=>{
 
 	User.findOne({uid:user_id}).exec()
 	.then((oneUser)=>{
-		res.send(oneUser.devices);
+		let devices = oneUser.devices;
+		let responce = {"running_devices":[]};
+		devices.forEach((device)=>{
+			responce.running_devices.push({
+				"device_id": device.did,
+				"name": device.name,
+				"image_url": device.image_url,
+				"last_used": device.last_used,
+				"consumed_units": device.consumed_units,
+			});
+
+		});
+		responce.running_devices.sort(function(a, b){
+		    var keyA = a.device_id,
+		    	keyB = b.device_id;
+		    // Compare the 2 dates
+		    if(keyA < keyB) return -1;
+		    if(keyA > keyB) return 1;
+		    return 0;
+		});
+		res.send(responce);
 	})
 	.catch(function(err){
   		console.log('error:', err);

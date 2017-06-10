@@ -7,16 +7,21 @@ var DeviceSchema = new Schema(
 		name: 		{type:String},
 		did: 		{type: Number, required:true},	
 		image_url: 	{type: String},
-		last_used: 	{type: Date},
+		last_used: 	{type: Number},
 		consumed_units: {type:Number, default:0},
+		isRunning: {type:Boolean, default:false},
 		isScheduled: {type: Boolean, default:false},
 		schedule: {
-			start: {type:Date ,default:null},
-			stop: {type:Date ,default:null},
+			start: {type:Number ,default:null},
+			stop: {type:Number ,default:null},
 
 		}
 		
 	});
+
+// DeviceSchema.virtual('schedule.stop').get(function () {
+// 	return new Date(this.schedule.start.)
+// });
 
 //Turned to a model before exporting
 module.exports = mongoose.model('Device', DeviceSchema);

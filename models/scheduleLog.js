@@ -3,9 +3,7 @@ var Schema = mongoose.Schema;
 
 var ScheduleLogSchema = new Schema(
 	{
-		did: 		{type: Number, required:true, unique:true},	
-		start_job: 	{},
-		timeout: 	{type:Number, default: null},
+		uid: 		{type: Number, required:true, unique:true},	
 		log: 		[]
 		
 	});

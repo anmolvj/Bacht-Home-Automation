@@ -7,10 +7,11 @@ var UserSchema = Schema(
 		uid: 		{type: Number, required:true, unique: true},
 		name: 		{type:String},
 		total_usage: {type:Number, default:0},
-		token: 		{type:String, default:null},
+		token: 		{type:String, default:"none"},
 		max_limit: 	{type:Number, default:1000},
 		usage: 		{type:Number, default:0},
 		devices: 	[],
+		wasNotified: {type:Boolean, default:false},
 		history: {
 					day: 	{type:Number, default:0},
 					week: 	{type:Number, default:0},
