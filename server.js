@@ -5,7 +5,8 @@ var bodyParser  = require('body-parser');
 var mongoose 	= require('mongoose');
 var mlabKey 	= 'VkK3Nww3z_Od7mFWwiAPt6tcCTLyK95Q';
 var port 		= 3000;
-
+const async = require('async');
+const request = require('request');
 var cron 	= require('node-cron');
 var log 	= require('./models/scheduleLog');
 // var schedule = require('node-schedule');
@@ -58,7 +59,33 @@ conn.once('open', function() {
   console.log("Connection to mlab established");                         
 });
 
+app.get('/esp',(req,res,next)=>{
+	function httpGet(url, callback) {
+				  const options = {
+				    url :  url,
+				    json : true
+				  };
+				  request(options,
+				    function(err, res, body) {
+				      callback(err, body);
+				    }
+				  );
+				}
 
+				const urls= [
+				  "https://cloud.arest.io/chipotle01/mode/4/o",
+				  "https://cloud.arest.io/chipotle01/mode/5/o",
+				  "https://cloud.arest.io/chipotle01/mode/2/o",
+				  "https://cloud.arest.io/chipotle01/mode/16/o",
+				  "https://cloud.arest.io/chipotle01/mode/0/o"
+				  
+				];
+
+				async.map(urls, httpGet, function (err, res){
+				  if (err) return console.log(err);
+				  console.log(res);
+				});
+})
 
 app.get('/',(req,res,next)=>{
 		//USER INITIALIZATION BLOCK
@@ -73,15 +100,15 @@ app.get('/',(req,res,next)=>{
 
 app.get('/init',(req,res,next)=>{
 
-	var d1 = new device({did:01,name:"Television",	consumed_units:50, image_url:"https://cdn.pixabay.com/photo/2013/07/13/01/08/monitor-155158_960_720.png"});
+	var d1 = new device({switch_off:"https://cloud.arest.io/chipotle01/digital/4/0" , switch_on: "https://cloud.arest.io/chipotle01/digital/4/1",did:01,name:"Television",	consumed_units:50, image_url:"https://cdn.pixabay.com/photo/2013/07/13/01/08/monitor-155158_960_720.png"});
 	// var log1 = new log({did:d1.did});
-	var d2 = new device({did:02,name:"Refrigerator", consumed_units:79, image_url:"http://www.gadgetreview.com/wp-content/uploads/2014/08/refrigerator-reviews.jpg"});
+	var d2 = new device({switch_off:"https://cloud.arest.io/chipotle01/digital/5/0" , switch_on: "https://cloud.arest.io/chipotle01/digital/5/1",did:02,name:"Refrigerator", consumed_units:79, image_url:"http://www.gadgetreview.com/wp-content/uploads/2014/08/refrigerator-reviews.jpg"});
 	// var log2 = new log({did:d2.did});
-	var d3 = new device({did:03,name:"Air Conditioner",consumed_units:232, image_url:"http://image3.mouthshut.com/images//Offline/Common/Guide/Images/air-conditioner.png"});
+	var d3 = new device({switch_off:"https://cloud.arest.io/chipotle01/digital/2/0" , switch_on: "https://cloud.arest.io/chipotle01/digital/2/1",did:03,name:"Air Conditioner",consumed_units:232, image_url:"http://image3.mouthshut.com/images//Offline/Common/Guide/Images/air-conditioner.png"});
 	// var log3 = new log({did:d3.did});
-	var d4 = new device({did:04,name:"Washing Machine",consumed_units:240, image_url:"http://images.samsung.com/is/image/samsung/p5/ae/washing-machines/ww12-eco-bubble-washer-with-simply-add-during-wash.png"});
+	var d4 = new device({switch_off:"https://cloud.arest.io/chipotle01/digital/16/0" , switch_on: "https://cloud.arest.io/chipotle01/digital/16/1",did:04,name:"Washing Machine",consumed_units:240, image_url:"http://images.samsung.com/is/image/samsung/p5/ae/washing-machines/ww12-eco-bubble-washer-with-simply-add-during-wash.png"});
 	// var log4 = new log({did:d4.did});
-	var d5 = new device({did:05,name:"Car Charger", isScheduled: true, scheduled_at: 1495326600, image_url:"https://cdn0.iconfinder.com/data/icons/cars-and-transportation-glyph/96/26-512.png"});
+	var d5 = new device({switch_off:"https://cloud.arest.io/chipotle01/digital/0/0" , switch_on: "https://cloud.arest.io/chipotle01/digital/0/1",did:05,name:"Car Charger", isScheduled: true, scheduled_at: 1495326600, image_url:"https://cdn0.iconfinder.com/data/icons/cars-and-transportation-glyph/96/26-512.png"});
 	// var log5 = new log({did:d5.did});
 
 	user.where({ uid: 1 }).update({ $push: { "devices" : d1 }}).exec()
@@ -111,14 +138,34 @@ function getSeconds(date){
 //CRON JOBS
 app.get('/cron',(req,res,next)=>{
 
-	cron.schedule('*/5 * * * * *', function(){
+	cron.schedule('*/1 * * * * *', function(){
 			
 		  let cSec = Math.floor((new Date).getTime()/1000);
 		  //////
 		  user.findOne({uid:1}).exec()
 			.then((oneUser)=>{
 				let sdevices = oneUser.devices.filter((obj)=>{ return obj.isScheduled == true && obj.schedule<cSec;});
+				let stopURI = {};
 				sdevices.forEach((device)=>{
+
+							function httpGet(url, callback) {
+									  const options = {
+									    url :  url,
+									    json : true
+									  };
+									  request(options,
+									    function(err, res, body) {
+									      callback(err, body);
+									    }
+									  );
+									}
+							const urls= [device.switch_on];
+
+							async.map(urls, httpGet, function (err, res){
+								  if (err) return console.log(err);
+								  console.log(res);
+								});
+							
 							console.log("Device Started: " + device.name);
 							user.update(
 								    {uid: 1, 'devices.did': device.did}, 

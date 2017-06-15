@@ -11,10 +11,13 @@ var DeviceSchema = new Schema(
 		consumed_units: {type:Number, default:0},
 		running_since: {type: Date, default: Date.now},
 		isScheduled: {type: Boolean, default:false},
-		schedule: {type:Number ,default:0}
+		schedule: {type:Number ,default:0},
+		switch_on:{type:String,default:'empty'},
+		switch_off: {type: String, default:'empty'}
 			
 		
 	});
+
 
 // DeviceSchema.virtual('schedule.stop').get(function () {
 // 	return new Date(this.schedule.start.)

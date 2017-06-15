@@ -17,13 +17,14 @@
   },
   "homepage": "https://github.com/anmolvj/bacht#readme",
   "dependencies": {
-    "async": "^2.4.0",
+    "async": "^2.4.1",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "mongoose": "^4.10.0",
     "node-cron": "^1.2.0",
     "node-gcm": "^0.14.6",
     "node-schedule": "^1.2.3",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "request": "^2.81.0"
   }
 }
