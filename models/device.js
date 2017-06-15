@@ -9,14 +9,10 @@ var DeviceSchema = new Schema(
 		image_url: 	{type: String},
 		last_used: 	{type: Number},
 		consumed_units: {type:Number, default:0},
-		isRunning: {type:Boolean, default:true},
 		running_since: {type: Date, default: Date.now},
 		isScheduled: {type: Boolean, default:false},
-		schedule: {
-			start: {type:Number ,default:null},
-			stop: {type:Number ,default:null},
-
-		}
+		schedule: {type:Number ,default:0}
+			
 		
 	});
 

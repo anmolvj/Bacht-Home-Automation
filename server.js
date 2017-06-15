@@ -81,7 +81,7 @@ app.get('/init',(req,res,next)=>{
 	// var log3 = new log({did:d3.did});
 	var d4 = new device({did:04,name:"Washing Machine",consumed_units:240, image_url:"http://images.samsung.com/is/image/samsung/p5/ae/washing-machines/ww12-eco-bubble-washer-with-simply-add-during-wash.png"});
 	// var log4 = new log({did:d4.did});
-	var d5 = new device({did:05,name:"Car Charger", isScheduled: true, isRunning:false, image_url:"https://cdn0.iconfinder.com/data/icons/cars-and-transportation-glyph/96/26-512.png"});
+	var d5 = new device({did:05,name:"Car Charger", isScheduled: true, scheduled_at: 1495326600, image_url:"https://cdn0.iconfinder.com/data/icons/cars-and-transportation-glyph/96/26-512.png"});
 	// var log5 = new log({did:d5.did});
 
 	user.where({ uid: 1 }).update({ $push: { "devices" : d1 }}).exec()
@@ -99,66 +99,47 @@ app.get('/init',(req,res,next)=>{
 	.catch(function(err){
 	  console.log('Error Caught:', err.message);
 	});
-	// log1.save()
-	// .then(log2.save())
-	// .then(log3.save())
-	// .then(log4.save())
-	// .then(log5.save())
-	// .catch(function(err){
-	  
-	//   console.log('Error Caught:', err.message);
-	// });
-
+	
 	res.send("DB Initialization Complete");
 })
 
-app.get('/crons',(req,res,next)=>{
+function getSeconds(date){
+	let sec = new Date(date).toISOString();
+	return sec;
+	}
 
-	//--------------GCM CRON
-	//cronJob(every 20 seconds){
-	//	get user document and save in a json
-	//	if(wasNotified==false){
-	//		get current minute rate from a static json with 60 values
-	//		loop{ tPower = tPower + each(device power)*cRate}
-	//		if(tPower>maxPLimit from user doc){
-	//			send(GCM notification)
-	//			set(wasNotified==true)
-	//			cronJob(once after 1 minute){
-	//				wasNotified = false;
-	//			}
-	//			
-	//		}
-	//	}
-	//}
-	// var task = cron.schedule(new Date()+10000, function() {
-	// 	  		console.log('cron task at work!!');
-	// 			}, false);
-	// task.start();
-	// setTimeout(task.destroy(),5000);
-	
+//CRON JOBS
+app.get('/cron',(req,res,next)=>{
 
-	//-------------SCHEDULE EXECUTE CRON
-	//cronJob(every 5 sec){
-	//	get all isScheduled devices
-	//	foreach(devices){
-			// if(currentTime>=device.schedule.start && currentTime<device.schedule){
-	//			startDevice();
-	//			
-	//		}
-	//		if{currentTime>=device.schedule.stop}{
-	//			stopDevice();
-	//			log={
-	//				name: device.name,
-	//				did: device.did,
-	//				start: device.start,
-	//				stop: current time,
-	//				consumed: (stop-start)*device.watt*currentRate,
-	//			}
-	//			push log into user log document
-	//			add consumption to device in user document
-	//			
-	//		}
-	//	}
+	cron.schedule('*/5 * * * * *', function(){
+			
+		  let cSec = Math.floor((new Date).getTime()/1000);
+		  //////
+		  user.findOne({uid:1}).exec()
+			.then((oneUser)=>{
+				let sdevices = oneUser.devices.filter((obj)=>{ return obj.isScheduled == true && obj.schedule<cSec;});
+				sdevices.forEach((device)=>{
+							console.log("Device Started: " + device.name);
+							user.update(
+								    {uid: 1, 'devices.did': device.did}, 
+								    {'$set': { 'devices.$.isScheduled': false,}})
+									.catch(function(err){
+							  			console.log('Error Handler:', err.message);
+									});
+
+							
+					});
+
+		
+	})
+	.catch(function(err){
+  		console.log('error:', err);
+		});
+
+	});
+		  //////////
+		
+	res.send('cron started');
 	
 });
 

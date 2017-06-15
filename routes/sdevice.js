@@ -20,7 +20,7 @@ function getDate(sec){
 	}
 
 function getSeconds(date){
-	let sec = new Date(date).toISOString();
+	let sec = (new Date(date)).getTime();
 	return sec;
 	}
 
@@ -56,7 +56,7 @@ router.get('/:uid', (req,res,next)=>{
 				"device_id": device.did,
 				"name": device.name,
 				"image_url": device.image_url,
-				"scheduled_at": device.schedule.start
+				"scheduled_at": device.schedule
 			});
 		});
 		
@@ -85,43 +85,20 @@ router.post('/', (req,res,next)=>{
 	let device_id = req.body.device_id;
 	let schedule_at = req.body.schedule_at;
 	let isPast = false;//to check if device schedule time is in past
-	// if(schedule_at==null || schedule_at==undefined){
-	// 	res.send("Value of Schedule_at is invalid");
-	// }
-	// if(isNaN(schedule_at)){
-	// 	res.send("Value of Schedule_at must only have numerical digits in string format");
-	// }
-	// if(schedule_at.length != 10){
-	// 	res.send("The schedule_at value must be an epoch/POSIX/Unix time with exactly 10 digits");
-	// }
-	if(schedule_at<getSeconds(new Date())){
-		isPast = true;
-	}
-
-	//TIME -> DATE
-	let start = getDate(schedule_at);//returns date object
-	let stop = start.setMinutes(start.getMinutes() + 5);
-	//Get device
-	//set its start and stop time
-	//set isScheduled == true
 
 	User.update(
 	    {uid: user_id, 'devices.did': device_id}, 
 	    {'$set': {
 	        'devices.$.isScheduled': true,
-	        'devices.$.schedule.start': schedule_at,
-	        'devices.$.isRunning': false         
-	    	},
+	        'devices.$.schedule': schedule_at        
+	    	}
 
 	    })
 		.catch(function(err){
   			console.log('Error Handler:', err.message);
 		});
 
-		// if(isPassed){
-		// 		res.send({success: true;})
-		// }else{}
-    			res.send({success: true});
+    	res.send({success: true});
     		
 	
 
