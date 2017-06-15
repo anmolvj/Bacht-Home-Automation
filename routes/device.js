@@ -3,6 +3,19 @@ var router 		= express.Router();
 var Device 		= require('../models/device');
 var User 		= require('../models/user');
 
+function getDate(sec){
+	let d = new Date(0);
+	d.setUTCSeconds(sec);
+	return d;
+	}
+
+function getSeconds(date){
+	let sec = Math.round(date.getTime() / 1000);
+	return sec;
+	}
+
+
+
 // var mongoose = require('mongoose');
 // var mongoDB = 'mongodb://root:12345@ds017155.mlab.com:17155/bacht';
 // mongoose.connect(mongoDB);
@@ -27,21 +40,26 @@ var User 		= require('../models/user');
 //GET == Get all the devices 
 router.get('/:uid', (req,res,next)=>{
 	var user_id = req.params.uid;
-
+	//
 	User.findOne({uid:user_id}).exec()
 	.then((oneUser)=>{
-		let devices = oneUser.devices;
-		let responce = {"running_devices":[]};
-		devices.forEach((device)=>{
-			responce.running_devices.push({
-				"device_id": device.did,
-				"name": device.name,
-				"image_url": device.image_url,
-				"last_used": device.last_used,
-				"consumed_units": device.consumed_units,
-			});
-
+		let devices = oneUser.devices.filter((obj)=>{
+			return obj.isScheduled == false;
+			
 		});
+			let responce = {"running_devices":[]};
+			devices.forEach((device)=>{
+				let epoch = getSeconds(device.running_since);
+				responce.running_devices.push({
+					"device_id": device.did,
+					"name": device.name,
+					"image_url": device.image_url,
+					"last_used": device.last_used,
+					"consumed_units": device.consumed_units,
+					"running_since": epoch
+			});
+		});
+		
 		responce.running_devices.sort(function(a, b){
 		    var keyA = a.device_id,
 		    	keyB = b.device_id;
@@ -51,10 +69,41 @@ router.get('/:uid', (req,res,next)=>{
 		    return 0;
 		});
 		res.send(responce);
+		
 	})
 	.catch(function(err){
   		console.log('error:', err);
 		});
+	//
+
+
+	// User.findOne({uid:user_id}).exec()
+	// .then((oneUser)=>{
+	// 	let devices = oneUser.devices;
+	// 	let responce = {"running_devices":[]};
+	// 	devices.forEach((device)=>{
+	// 		responce.running_devices.push({
+	// 			"device_id": device.did,
+	// 			"name": device.name,
+	// 			"image_url": device.image_url,
+	// 			"last_used": device.last_used,
+	// 			"consumed_units": device.consumed_units,
+	// 		});
+
+	// 	});
+	// 	responce.running_devices.sort(function(a, b){
+	// 	    var keyA = a.device_id,
+	// 	    	keyB = b.device_id;
+	// 	    // Compare the 2 dates
+	// 	    if(keyA < keyB) return -1;
+	// 	    if(keyA > keyB) return 1;
+	// 	    return 0;
+	// 	});
+	// 	res.send(responce);
+	// })
+	// .catch(function(err){
+ //  		console.log('error:', err);
+	// 	});
 	
 
 	});

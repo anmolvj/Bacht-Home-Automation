@@ -8,7 +8,7 @@ var port 		= 3000;
 
 var cron 	= require('node-cron');
 var log 	= require('./models/scheduleLog');
-var schedule = require('node-schedule');
+// var schedule = require('node-schedule');
 
 
 app.use(bodyParser.json());         
@@ -34,15 +34,15 @@ app.post('/',(req,res,next)=>{
 		// task2.start();
 
 
-var devv = require('./routes/device');
-var sdevv = require('./routes/sdevice');
-var token = require('./routes/token');
-var home = require('./routes/home');
-var hy = require('./routes/hy');
-var hm = require('./routes/hm');
-var hd = require('./routes/hd');
-var hdev = require('./routes/hdev');
-var gcm = require('./routes/gcm');
+var devv 	= require('./routes/device');
+var sdevv 	= require('./routes/sdevice');
+var token 	= require('./routes/token');
+var home 	= require('./routes/home');
+var hy 		= require('./routes/hy');
+var hm 		= require('./routes/hm');
+var hd 		= require('./routes/hd');
+var hdev 	= require('./routes/hdev');
+var gcm 	= require('./routes/gcm');
 
 var user 		= require('./models/user');
 var device 		= require('./models/device');
@@ -81,7 +81,7 @@ app.get('/init',(req,res,next)=>{
 	// var log3 = new log({did:d3.did});
 	var d4 = new device({did:04,name:"Washing Machine",consumed_units:240, image_url:"http://images.samsung.com/is/image/samsung/p5/ae/washing-machines/ww12-eco-bubble-washer-with-simply-add-during-wash.png"});
 	// var log4 = new log({did:d4.did});
-	var d5 = new device({did:05,name:"Car Charger", isScheduled: true, image_url:"https://cdn0.iconfinder.com/data/icons/cars-and-transportation-glyph/96/26-512.png"});
+	var d5 = new device({did:05,name:"Car Charger", isScheduled: true, isRunning:false, image_url:"https://cdn0.iconfinder.com/data/icons/cars-and-transportation-glyph/96/26-512.png"});
 	// var log5 = new log({did:d5.did});
 
 	user.where({ uid: 1 }).update({ $push: { "devices" : d1 }}).exec()
@@ -130,13 +130,18 @@ app.get('/crons',(req,res,next)=>{
 	//		}
 	//	}
 	//}
+	// var task = cron.schedule(new Date()+10000, function() {
+	// 	  		console.log('cron task at work!!');
+	// 			}, false);
+	// task.start();
+	// setTimeout(task.destroy(),5000);
 	
 
 	//-------------SCHEDULE EXECUTE CRON
 	//cronJob(every 5 sec){
 	//	get all isScheduled devices
 	//	foreach(devices){
-			if(currentTime>=device.schedule.start && currentTime<device.schedule){
+			// if(currentTime>=device.schedule.start && currentTime<device.schedule){
 	//			startDevice();
 	//			
 	//		}
@@ -154,8 +159,8 @@ app.get('/crons',(req,res,next)=>{
 	//			
 	//		}
 	//	}
-	}
-})
+	
+});
 
 
 

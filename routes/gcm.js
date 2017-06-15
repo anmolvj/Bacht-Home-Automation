@@ -13,7 +13,22 @@ router.get('/', (req,res,next)=>{
 
 	// Prepare a message to be sent
 	var message = new gcm.Message({
-	    data: { key1: 'The Electricity Price just increased' }
+	    collapseKey: 'demo',
+                priority: 'high',
+                contentAvailable: true,
+                delayWhileIdle: true,
+                timeToLive: 3,
+                dryRun: true,
+                data: {
+                        key1: 'message1',
+                        key2: 'message2'
+                },
+                notification: {
+                        title: "Hello, World",
+                        icon: "ic_launcher",
+                        body: "This is a notification that will be displayed if your app is in the background."
+                }
+        });
 	});
 
 	// Specify which registration IDs to deliver the message to
@@ -24,16 +39,25 @@ router.get('/', (req,res,next)=>{
 
 			// Actually send the message
 			sender.sendNoRetry(message, { registrationTokens: regTokens }, function (err, response) {
-				if (err) console.error(err);
-				else console.log(response);
+				if (err) {
+					console.error(err);
+				}
+				else {
+					console.log(response);
+					if(response.success == 0){
+						res.send({"success":"false","error": response.results});
+					}else{
+						res.send({"success":"true"});
+					}
+				}
 			});
 		})
 		.catch(function(err){
-	  		console.log('error:', err);
+	  		console.log("An error occured during GCM call");
 			});
 
 	
-});
+
 
 
 

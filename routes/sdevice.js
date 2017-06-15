@@ -85,15 +85,15 @@ router.post('/', (req,res,next)=>{
 	let device_id = req.body.device_id;
 	let schedule_at = req.body.schedule_at;
 	let isPast = false;//to check if device schedule time is in past
-	if(schedule_at==null || schedule_at==undefined){
-		res.send("Value of Schedule_at is invalid");
-	}
-	if(isNaN(schedule_at)){
-		res.send("Value of Schedule_at must only have numerical digits in string format");
-	}
-	if(schedule_at.length != 10){
-		res.send("The schedule_at value must be an epoch/POSIX/Unix time with exactly 10 digits");
-	}
+	// if(schedule_at==null || schedule_at==undefined){
+	// 	res.send("Value of Schedule_at is invalid");
+	// }
+	// if(isNaN(schedule_at)){
+	// 	res.send("Value of Schedule_at must only have numerical digits in string format");
+	// }
+	// if(schedule_at.length != 10){
+	// 	res.send("The schedule_at value must be an epoch/POSIX/Unix time with exactly 10 digits");
+	// }
 	if(schedule_at<getSeconds(new Date())){
 		isPast = true;
 	}
@@ -109,7 +109,8 @@ router.post('/', (req,res,next)=>{
 	    {uid: user_id, 'devices.did': device_id}, 
 	    {'$set': {
 	        'devices.$.isScheduled': true,
-	        'devices.$.schedule.start': schedule_at          
+	        'devices.$.schedule.start': schedule_at,
+	        'devices.$.isRunning': false         
 	    	},
 
 	    })
