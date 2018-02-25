@@ -1,4 +1,4 @@
-# bacht
+# BACHT (***saving***)
 
 **Bacht** is a Hindi word for ***savings***. Bacht was build as home automation system using an Android application that uses this REST Api for scheduling  working hours for smart home appliances using ESP8266 wifi module.
 
