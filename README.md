@@ -7,9 +7,6 @@
   <a href="https://github.com/anmolvj/bacht/graphs/commit-activity" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
   </a>
-  <a href=" " target="_blank">
-    <img alt="License: ISC" src="https://img.shields.io/github/license/anmolvj/Bachat (Savings)" />
-  </a>
 </p>
 
 > **Bacht** is a Hindi word for ***savings***. Bacht was build as home automation system using an Android application that uses this REST Api for scheduling  working hours for smart home appliances using ESP8266 wifi module. <br />
