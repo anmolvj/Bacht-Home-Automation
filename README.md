@@ -4,8 +4,8 @@
   <a href=" " target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
-  <a href="https://github.com/anmolvj/bacht/graphs/commit-activity" target="_blank">
-    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
+  <a href="https://github.com/anmolvj/fitness-app/graphs/commit-activity" target="_blank">
+    <img alt="Maintenance" src="https://img.shields.io/maintenance/no/2019" />
   </a>
 </p>
 
